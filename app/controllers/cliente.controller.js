@@ -1,11 +1,9 @@
-// importamos db los modelos en este caso si tenemos uno o mas, se puede referenciar db."nombreModelo".   
 const db = require("../models");
 const Cliente = db.clientes;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Client
+
 exports.create = (req, res) => {
-    // Validamos que dentro del  request no venga vacio el nombre, de lo contrario returna error
     if (!req.body.nombre) {
         res.status(400).send({
             message: "Content can not be empty!"
@@ -13,7 +11,7 @@ exports.create = (req, res) => {
         return;
     }
 
-    // Create a Client, definiendo una variable con la estructura del reques para luego solo ser enviada como parametro mas adelante. 
+
     const cliente = {
         nombre: req.body.nombre,
         apellido: req.body.apellido,
@@ -21,11 +19,10 @@ exports.create = (req, res) => {
         correo: req.body.correo,
         telefono: req.body.telefono,
         ingreso: req.body.ingreso,
-        // utilizando ? nos ayuda a indicar que el paramatro puede ser opcional dado que si no viene, le podemos asignar un valor default
         status: req.body.status ? req.body.status : false
     };
 
-    // Save a new Client into the database
+
     Cliente.create(cliente)
         .then(data => {
             res.send(data);
@@ -38,7 +35,7 @@ exports.create = (req, res) => {
         });
 };
 
-// Retrieve all Client from the database.
+
 exports.findAll = (req, res) => {
     const nombre = req.query.nombre;
     var condition = nombre ? { nombre: { [Op.iLike]: `%${nombre}%` } } : null;
@@ -55,7 +52,7 @@ exports.findAll = (req, res) => {
         });
 };
 
-// Find a single Tutorial with an id
+
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
@@ -70,7 +67,7 @@ exports.findOne = (req, res) => {
         });
 };
 
-// Update a Tutorial by the id in the request
+
 exports.update = (req, res) => {
     const id = req.params.id;
 
@@ -95,10 +92,10 @@ exports.update = (req, res) => {
         });
 };
 
-// Delete a Client with the specified id in the request
+
 exports.delete = (req, res) => {
     const id = req.params.id;
-    // utilizamos el metodo destroy para eliminar el objeto mandamos la condicionante where id = parametro que recibimos 
+
     Cliente.destroy({
         where: { id: id }
     })
@@ -120,7 +117,7 @@ exports.delete = (req, res) => {
         });
 };
 
-// Delete all Clients from the database.
+
 exports.deleteAll = (req, res) => {
     Cliente.destroy({
         where: {},
@@ -137,7 +134,7 @@ exports.deleteAll = (req, res) => {
         });
 };
 
-// find all active Client, basado en el atributo status vamos a buscar que solo los clientes activos
+
 exports.findAllStatus = (req, res) => {
     Cliente.findAll({ where: { status: true } })
         .then(data => {
