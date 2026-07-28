@@ -1,36 +1,33 @@
 const db = require("../models");
-const Cliente = db.cliente;
+const Proveedor = db.proveedor;
 const Op = db.Sequelize.Op;
 
 
 exports.create = (req, res) => {
     if (!req.body.nombre) {
         res.status(400).send({
-            message: "Content can not be empty!"
+            message: "El contenido no puede estar vacio!"
         });
         return;
     }
 
 
-    const cliente = {
+    const proveedor = {
         nombre: req.body.nombre,
-        apellido: req.body.apellido,
-        direccion: req.body.direccion,
-        correo: req.body.correo,
+        contacto: req.body.contacto,
         telefono: req.body.telefono,
-        ingreso: req.body.ingreso,
-        status: req.body.status ? req.body.status : false
+        status: req.body.status ? req.body.status : true
     };
 
 
-    Cliente.create(cliente)
+    Proveedor.create(proveedor)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while creating the Client."
+                    err.message || "Se produjo un error al crear al proveedor!"
             });
         });
 };
@@ -40,14 +37,14 @@ exports.findAll = (req, res) => {
     const nombre = req.query.nombre;
     var condition = nombre ? { nombre: { [Op.iLike]: `%${nombre}%` } } : null;
 
-    Cliente.findAll({ where: condition })
+    Proveedor.findAll({ where: condition })
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving clients."
+                    err.message || "Se produjo un error al recuperar los proveedores!"
             });
         });
 };
@@ -56,13 +53,13 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Cliente.findByPk(id)
+    Proveedor.findByPk(id)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error retrieving Cliente with id=" + id
+                message: "Error al recuperar al proveedor con id=" + id
             });
         });
 };
@@ -71,23 +68,23 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Cliente.update(req.body, {
+    Proveedor.update(req.body, {
         where: { id: id }
     })
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "Cliente was updated successfully."
+                    message: "El Proveedor se actualizo correctamene."
                 });
             } else {
                 res.send({
-                    message: `Cannot update Client with id=${id}. Maybe Client was not found or req.body is empty!`
+                    message: `No se puede actualizar el proveedor con id=${id}. ¡Es posible que no se haya encontrado el proveedor o que req.body esté vacío!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error updating Client with id=" + id
+                message: "Error al actualizar el proveedor con id=" + id
             });
         });
 };
@@ -96,54 +93,54 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Cliente.destroy({
+    Proveedor.destroy({
         where: { id: id }
     })
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "Client was deleted successfully!"
+                    message: "El Proveedor se elimino correctamente!"
                 });
             } else {
                 res.send({
-                    message: `Cannot delete Client with id=${id}. El cliente no fue encontado!`
+                    message: `No se puede elimar el proveedor con id=${id}, el proveedor no fue encontrado!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Could not delete Tutorial with id=" + id
+                message: "No se pudo eliminar el tutorial con id=" + id
             });
         });
 };
 
 
 exports.deleteAll = (req, res) => {
-    Cliente.destroy({
+    Proveedor.destroy({
         where: {},
         truncate: false
     })
         .then(nums => {
-            res.send({ message: `${nums} Clients were deleted successfully!` });
+            res.send({ message: `${nums} Los proveedores fueron eliminador correactamente!` });
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while removing all clients."
+                    err.message || "Se produjo un error al eliminar todos los proveedores!"
             });
         });
 };
 
 
 exports.findAllStatus = (req, res) => {
-    Cliente.findAll({ where: { status: true } })
+    Proveedor.findAll({ where: { status: true } })
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving Client."
+                    err.message || "Se produjo un error al recuperar los proveedores."
             });
         });
 };

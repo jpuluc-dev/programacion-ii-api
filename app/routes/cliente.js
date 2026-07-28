@@ -9,4 +9,4 @@ module.exports = app => {
     router.delete("/delete/:id", clientes.delete);
     router.delete("/delete/", clientes.deleteAll);
     app.use("/api/customer", router);
-};   
+};
